@@ -75,15 +75,10 @@ class _LoginViewState extends ConsumerState<LoginView> {
                     _gap,
                     ElevatedButton(
                       onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          // await ref
-                          //     .read(authViewModelProvider.notifier)
-                          //     .loginStudent(
-                          //       context,
-                          //       _usernameController.text,
-                          //       _passwordController.text,
-                          //     );
-                        }
+                        Navigator.pushNamed(context, AppRoute.homeRoute);
+                        // if (_formKey.currentState!.validate()) {
+
+                        // }
                       },
                       child: const SizedBox(
                         height: 50,
