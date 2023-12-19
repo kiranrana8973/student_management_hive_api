@@ -1,10 +1,11 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:student_management_hive_api/config/constants/hive_table_constant.dart';
+import 'package:student_management_hive_api/features/auth/domain/entity/auth_entity.dart';
 import 'package:student_management_hive_api/features/batch/data/model/batch_hive_model.dart';
 import 'package:student_management_hive_api/features/course/data/model/course_hive_model.dart';
 import 'package:uuid/uuid.dart';
 
-// part 'auth_hive_model.g.dart';
+part 'auth_hive_model.g.dart';
 
 @HiveType(typeId: HiveTableConstant.studentTableId)
 class AuthHiveModel {
@@ -56,6 +57,17 @@ class AuthHiveModel {
           username: '',
           password: '',
         );
+
+  AuthEntity toEntity() => AuthEntity(
+        id: studentId,
+        fname: fname,
+        lname: lname,
+        phone: phone,
+        batch: batch.toEntity(),
+        courses: const [],
+        username: username,
+        password: password,
+      );
 
   @override
   String toString() {

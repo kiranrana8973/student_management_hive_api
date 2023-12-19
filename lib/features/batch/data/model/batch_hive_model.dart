@@ -3,6 +3,8 @@ import 'package:student_management_hive_api/config/constants/hive_table_constant
 import 'package:student_management_hive_api/features/batch/domain/entity/batch_entity.dart';
 import 'package:uuid/uuid.dart';
 
+part 'batch_hive_model.g.dart';
+
 @HiveType(typeId: HiveTableConstant.batchTableId)
 class BatchHiveModel {
   @HiveField(0)

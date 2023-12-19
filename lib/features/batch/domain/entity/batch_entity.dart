@@ -12,20 +12,8 @@ class BatchEntity extends Equatable {
     required this.batchName,
   });
 
-  factory BatchEntity.fromJson(Map<String, dynamic> json) => BatchEntity(
-        batchId: json["batchId"],
-        batchName: json["batchName"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "batchId": batchId,
-        "batchName": batchName,
-      };
-
   @override
   String toString() {
     return 'BatchEntity(batchId: $batchId, batchName: $batchName)';
   }
 }
-
-
