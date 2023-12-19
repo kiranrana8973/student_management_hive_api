@@ -29,7 +29,7 @@ class BatchViewModel extends StateNotifier<BatchState> {
       value.fold(
         (failure) => state = state.copyWith(isLoading: false),
         (success) {
-          state = state.copyWith(isLoading: false);
+          state = state.copyWith(isLoading: false, showMessage: true);
           getAllBatch();
         },
       );
@@ -47,5 +47,8 @@ class BatchViewModel extends StateNotifier<BatchState> {
       );
     });
   }
-  
+
+  void resetMessage(bool value) {
+    state = state.copyWith(showMessage: value);
+  }
 }

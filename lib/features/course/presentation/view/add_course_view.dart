@@ -12,6 +12,12 @@ class AddCourseView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final courseState = ref.watch(courseViewModelProvider);
+    // WidgetsBinding.instance.addPostFrameCallback((_) { 
+    //   if (courseState.showMessage) {
+    //     showSnackBar(message: 'Batch Added', context: context);
+    //     ref.read(batchViewModelProvider.notifier).resetMessage(false);
+    //   }
+    // });
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -76,8 +82,18 @@ class AddCourseView extends ConsumerWidget {
                       itemCount: courseState.courses.length,
                       itemBuilder: (context, index) {
                         return ListTile(
-                          title: Text(courseState.courses[index].courseName),
-                        );
+                            title: Text(courseState.courses[index].courseName),
+                            subtitle:
+                                Text(courseState.courses[index].courseId!),
+                            trailing: IconButton(
+                              onPressed: () {
+                                // ref
+                                //     .read(courseViewModelProvider.notifier)
+                                //     .deleteCourse(
+                                //         courseState.courses[index].courseId!);
+                              },
+                              icon: const Icon(Icons.delete),
+                            ));
                       },
                     ),
                   ),

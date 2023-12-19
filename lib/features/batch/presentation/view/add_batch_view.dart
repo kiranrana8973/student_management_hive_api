@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:student_management_hive_api/core/common/snackbar/my_snackbar.dart';
 import 'package:student_management_hive_api/features/batch/domain/entity/batch_entity.dart';
 import 'package:student_management_hive_api/features/batch/presentation/view_model/batch_view_model.dart';
 
@@ -12,6 +13,12 @@ class AddBatchView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final batchState = ref.watch(batchViewModelProvider);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (batchState.showMessage) {
+        showSnackBar(message: 'Batch Added', context: context);
+        ref.read(batchViewModelProvider.notifier).resetMessage(false);
+      }
+    });
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -100,6 +107,9 @@ class AddBatchView extends ConsumerWidget {
                       },
                     ),
                   ),
+            // batchState.showMessage
+            //     ? showSnackBar(message: 'Batch Added', context: context)
+            //     : Container(),
           ],
         ),
       ),
