@@ -14,8 +14,8 @@ class HomeState {
       : index = 0,
         lstWidgets = [
           const DashboardView(),
-          const AddBatchView(),
           const AddCourseView(),
+          AddBatchView(),
           const ProfileView(),
         ];
 

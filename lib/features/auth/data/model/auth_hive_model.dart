@@ -63,7 +63,7 @@ class AuthHiveModel {
         fname: fname,
         lname: lname,
         phone: phone,
-        batch: batch.toEntity(),
+        batch: BatchHiveModel.toEntity(batch),
         courses: const [],
         username: username,
         password: password,

@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:student_management_hive_api/features/batch/domain/entity/batch_entity.dart';
+import 'package:student_management_hive_api/features/batch/presentation/view_model/batch_view_model.dart';
 
-class AddBatchView extends ConsumerStatefulWidget {
-  const AddBatchView({super.key});
+class AddBatchView extends ConsumerWidget {
+  AddBatchView({super.key});
 
-  @override
-  ConsumerState<AddBatchView> createState() => _AddBatchViewState();
-}
-
-class _AddBatchViewState extends ConsumerState<AddBatchView> {
   final gap = const SizedBox(height: 8);
   final batchController = TextEditingController();
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -47,7 +45,11 @@ class _AddBatchViewState extends ConsumerState<AddBatchView> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  BatchEntity batch =
+                      BatchEntity(batchName: batchController.text);
+                  ref.read(batchViewModelProvider.notifier).addBatch(batch);
+                },
                 child: const Text('Add Batch'),
               ),
             ),
@@ -61,6 +63,25 @@ class _AddBatchViewState extends ConsumerState<AddBatchView> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+            ),
+            gap,
+            Expanded(
+              child: ref.watch(batchViewModelProvider).batches.isEmpty
+                  ? const Center(
+                      child: Text('No Batches'),
+                    )
+                  : ListView.builder(
+                      itemCount:
+                          ref.watch(batchViewModelProvider).batches.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text(ref
+                              .watch(batchViewModelProvider)
+                              .batches[index]
+                              .batchName),
+                        );
+                      },
+                    ),
             ),
           ],
         ),

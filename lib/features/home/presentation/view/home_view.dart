@@ -33,10 +33,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.location_city_outlined),
-            label: 'Location',
-          ),
         ],
         currentIndex: homeState.index,
         onTap: (index) {
