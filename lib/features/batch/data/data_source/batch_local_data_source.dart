@@ -22,9 +22,7 @@ class BatchLocalDataSource {
   // Add Batch
   Future<Either<Failure, bool>> addBatch(BatchEntity batch) async {
     try {
-      // Convert BatchEntity to BatchModel
-      BatchHiveModel batchHiveModel =
-          BatchHiveModel(batchName: batch.batchName);
+      BatchHiveModel batchHiveModel = BatchHiveModel.toHiveModel(batch);
       hiveService.addBatch(batchHiveModel);
       return const Right(true);
     } catch (e) {
@@ -35,6 +33,7 @@ class BatchLocalDataSource {
   Future<Either<Failure, List<BatchEntity>>> getAllBatches() async {
     try {
       List<BatchHiveModel> batches = await hiveService.getAllBatches();
+      // Convert Hive Object to Entity
       List<BatchEntity> batchEntities =
           batches.map((e) => BatchHiveModel.toEntity(e)).toList();
       return Right(batchEntities);

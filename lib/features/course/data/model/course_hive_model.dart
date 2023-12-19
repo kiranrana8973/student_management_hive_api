@@ -21,16 +21,15 @@ class CourseHiveModel {
     required this.courseName,
   }) : courseId = courseId ?? const Uuid().v4();
 
-  // Convert Hive Object to Entity
-  CourseEntity toEntity() => CourseEntity(
-        courseId: courseId,
-        courseName: courseName,
+  // Convert Entity to Hive Object
+  factory CourseHiveModel.toHiveModel(CourseEntity entity) => CourseHiveModel(
+        courseName: entity.courseName,
       );
 
-  // Convert Entity to Hive Object
-  CourseHiveModel toHiveModel(CourseEntity entity) => CourseHiveModel(
-        // courseId: entity.courseId,
-        courseName: entity.courseName,
+  // Convert Hive Object to Entity
+  static CourseEntity toEntity(CourseHiveModel hiveModel) => CourseEntity(
+        courseId: hiveModel.courseId,
+        courseName: hiveModel.courseName,
       );
 
   @override

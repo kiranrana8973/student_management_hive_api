@@ -19,7 +19,9 @@ class BatchViewModel extends StateNotifier<BatchState> {
   BatchViewModel({
     required this.addBatchUsecase,
     required this.getAllBatchUsecase,
-  }) : super(BatchState.initialState());
+  }) : super(BatchState.initialState()) {
+    getAllBatch();
+  }
 
   void addBatch(BatchEntity batch) {
     state = state.copyWith(isLoading: true);
@@ -45,4 +47,5 @@ class BatchViewModel extends StateNotifier<BatchState> {
       );
     });
   }
+  
 }

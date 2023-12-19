@@ -11,6 +11,7 @@ class AddBatchView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final batchState = ref.watch(batchViewModelProvider);
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -65,24 +66,40 @@ class AddBatchView extends ConsumerWidget {
               ),
             ),
             gap,
-            Expanded(
-              child: ref.watch(batchViewModelProvider).batches.isEmpty
-                  ? const Center(
-                      child: Text('No Batches'),
-                    )
-                  : ListView.builder(
-                      itemCount:
-                          ref.watch(batchViewModelProvider).batches.length,
+            batchState.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : Expanded(
+                    child: ListView.builder(
+                      itemCount: batchState.batches.length,
                       itemBuilder: (context, index) {
                         return ListTile(
-                          title: Text(ref
-                              .watch(batchViewModelProvider)
-                              .batches[index]
-                              .batchName),
+                          title: Text(
+                            batchState.batches[index].batchName,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          subtitle: Text(
+                            batchState.batches[index].batchId ?? 'No id',
+                            style: const TextStyle(
+                              color: Colors.indigo,
+                              fontSize: 12,
+                            ),
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              // ref
+                              //     .read(batchViewModelProvider.notifier)
+                              //     .deleteBatch(
+                              //         batchState.batches[index].batchId);
+                            },
+                          ),
                         );
                       },
                     ),
-            ),
+                  ),
           ],
         ),
       ),
