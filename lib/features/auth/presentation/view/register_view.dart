@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class RegisterView extends ConsumerStatefulWidget {
-  const RegisterView({super.key});
-
-  @override
-  ConsumerState<RegisterView> createState() => _RegisterViewState();
-}
-
-class _RegisterViewState extends ConsumerState<RegisterView> {
+class RegisterView extends ConsumerWidget {
+  RegisterView({super.key});
   final _gap = const SizedBox(height: 8);
 
   final _key = GlobalKey<FormState>();
@@ -24,9 +18,10 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
   // final _usernameController = TextEditingController();
   // final _passwordController = TextEditingController();
 
-  bool isObscure = true;
+  final bool isObscure = true;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Register'),
@@ -151,11 +146,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                         icon: Icon(
                           isObscure ? Icons.visibility : Icons.visibility_off,
                         ),
-                        onPressed: () {
-                          setState(() {
-                            isObscure = !isObscure;
-                          });
-                        },
+                        onPressed: () {},
                       ),
                     ),
                     validator: ((value) {

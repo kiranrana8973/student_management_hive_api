@@ -20,5 +20,3 @@ class AuthLocalDataSource {
     return const Right(true);
   }
 }
-
-

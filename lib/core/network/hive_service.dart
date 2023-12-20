@@ -70,4 +70,11 @@ class HiveService {
     var box = await Hive.openBox<AuthHiveModel>(HiveTableConstant.studentBox);
     await box.delete(studentId);
   }
+
+  // Delete hive
+  Future<void> deleteHive() async {
+    await Hive.deleteBoxFromDisk(HiveTableConstant.studentBox);
+    await Hive.deleteBoxFromDisk(HiveTableConstant.batchBox);
+    await Hive.deleteBoxFromDisk(HiveTableConstant.courseBox);
+  }
 }

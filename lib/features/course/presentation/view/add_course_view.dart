@@ -12,7 +12,7 @@ class AddCourseView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final courseState = ref.watch(courseViewModelProvider);
-    // WidgetsBinding.instance.addPostFrameCallback((_) { 
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   if (courseState.showMessage) {
     //     showSnackBar(message: 'Batch Added', context: context);
     //     ref.read(batchViewModelProvider.notifier).resetMessage(false);
