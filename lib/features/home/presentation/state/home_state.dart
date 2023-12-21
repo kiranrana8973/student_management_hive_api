@@ -18,7 +18,6 @@ class HomeState {
           AddBatchView(),
           const ProfileView(),
         ];
-
   // CopyWith function to change the index no
   HomeState copyWith({
     int? index,

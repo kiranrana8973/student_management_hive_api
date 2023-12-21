@@ -6,7 +6,10 @@ import 'package:student_management_hive_api/features/auth/data/model/auth_hive_m
 import 'package:student_management_hive_api/features/batch/data/model/batch_hive_model.dart';
 import 'package:student_management_hive_api/features/course/data/model/course_hive_model.dart';
 
-final hiveServiceProvider = Provider<HiveService>((ref) => HiveService());
+// Create object using a provider
+final hiveServiceProvider = Provider<HiveService>(
+  (ref) => HiveService(),
+);
 
 class HiveService {
   Future<void> init() async {

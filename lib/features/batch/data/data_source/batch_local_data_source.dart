@@ -13,7 +13,6 @@ final batchLocalDatasourceProvider = Provider.autoDispose<BatchLocalDataSource>(
 
 class BatchLocalDataSource {
   final HiveService hiveService;
-  // final BatchHiveModel batchHiveModel;
 
   BatchLocalDataSource({
     required this.hiveService,
@@ -22,6 +21,7 @@ class BatchLocalDataSource {
   // Add Batch
   Future<Either<Failure, bool>> addBatch(BatchEntity batch) async {
     try {
+      // Convert BatchEntity to BatchHiveModel
       BatchHiveModel batchHiveModel = BatchHiveModel.toHiveModel(batch);
       hiveService.addBatch(batchHiveModel);
       return const Right(true);

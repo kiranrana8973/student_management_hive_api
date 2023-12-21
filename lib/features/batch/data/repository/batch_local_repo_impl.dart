@@ -8,7 +8,8 @@ import 'package:student_management_hive_api/features/batch/domain/repository/bat
 
 final batchLocalRepositoryProvider = Provider.autoDispose<IBatchRepository>(
   (ref) => BatchLocalRepositoryImpl(
-      batchLocalDataSource: ref.read(batchLocalDatasourceProvider)),
+    batchLocalDataSource: ref.read(batchLocalDatasourceProvider),
+  ),
 );
 
 class BatchLocalRepositoryImpl implements IBatchRepository {
