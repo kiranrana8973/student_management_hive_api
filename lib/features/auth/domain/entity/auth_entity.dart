@@ -3,7 +3,7 @@ import 'package:student_management_hive_api/features/batch/domain/entity/batch_e
 import 'package:student_management_hive_api/features/course/domain/entity/course_entity.dart';
 
 class AuthEntity extends Equatable {
-  final String? id;
+  final String? studentId;
   final String fname;
   final String lname;
   final String? image;
@@ -14,7 +14,7 @@ class AuthEntity extends Equatable {
   final String password;
 
   const AuthEntity({
-    this.id,
+    this.studentId,
     required this.fname,
     required this.lname,
     this.image,
@@ -27,5 +27,5 @@ class AuthEntity extends Equatable {
 
   @override
   List<Object?> get props =>
-      [id, fname, lname, image, phone, batch, courses, username, password];
+      [studentId, fname, lname, image, phone, batch, courses, username, password];
 }

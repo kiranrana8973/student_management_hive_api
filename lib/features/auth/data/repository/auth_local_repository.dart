@@ -1,10 +1,15 @@
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:student_management_hive_api/core/failure/failure.dart';
 import 'package:student_management_hive_api/features/auth/data/data_source/auth_local_data_source.dart';
 import 'package:student_management_hive_api/features/auth/domain/entity/auth_entity.dart';
 import 'package:student_management_hive_api/features/auth/domain/repository/auth_repository.dart';
+
+final authLocalRepositoryProvider = Provider.autoDispose<IAuthRepository>(
+  (ref) => AuthLocalRepository(ref.read(authLocalDataSourceProvider)),
+);
 
 class AuthLocalRepository implements IAuthRepository {
   final AuthLocalDataSource _authLocalDataSource;

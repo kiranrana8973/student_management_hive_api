@@ -45,7 +45,7 @@ class AuthHiveModel {
     required this.password,
   }) : studentId = studentId ?? const Uuid().v4();
 
-  // empty constructor
+  // // empty constructor
   AuthHiveModel.empty()
       : this(
           studentId: '',
@@ -58,15 +58,29 @@ class AuthHiveModel {
           password: '',
         );
 
-  AuthEntity toEntity() => AuthEntity(
-        id: studentId,
-        fname: fname,
-        lname: lname,
-        phone: phone,
-        batch: BatchHiveModel.toEntity(batch),
-        courses: const [],
-        username: username,
-        password: password,
+  // Convert Entity to Hive Object
+  factory AuthHiveModel.toHiveModel(AuthEntity entity) => AuthHiveModel(
+        fname: entity.fname,
+        lname: entity.lname,
+        phone: entity.phone,
+        batch: BatchHiveModel.toHiveModel(entity.batch),
+        courses:
+            entity.courses.map((e) => CourseHiveModel.toHiveModel(e)).toList(),
+        username: entity.username,
+        password: entity.password,
+      );
+
+  // Convert Hive Object to Entity
+  static AuthEntity toEntity(AuthHiveModel hiveModel) => AuthEntity(
+        studentId: hiveModel.studentId,
+        fname: hiveModel.fname,
+        lname: hiveModel.lname,
+        phone: hiveModel.phone,
+        batch: BatchHiveModel.toEntity(hiveModel.batch),
+        courses:
+            hiveModel.courses.map((e) => CourseHiveModel.toEntity(e)).toList(),
+        username: hiveModel.username,
+        password: hiveModel.password,
       );
 
   @override

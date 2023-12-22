@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:student_management_hive_api/core/common/snackbar/my_snackbar.dart';
+import 'package:student_management_hive_api/features/auth/domain/entity/auth_entity.dart';
+import 'package:student_management_hive_api/features/auth/presentation/auth_viewmodel/auth_viewmodel.dart';
 import 'package:student_management_hive_api/features/batch/domain/entity/batch_entity.dart';
 import 'package:student_management_hive_api/features/batch/presentation/view_model/batch_view_model.dart';
 import 'package:student_management_hive_api/features/course/domain/entity/course_entity.dart';
@@ -25,13 +28,22 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
 
   bool isObscure = true;
 
-  BatchEntity? selectedEntity;
+  BatchEntity? selectedBatch;
   final List<CourseEntity> _lstCourseSelected = [];
 
   @override
   Widget build(BuildContext context) {
     final batchState = ref.watch(batchViewModelProvider);
     final courseState = ref.watch(courseViewModelProvider);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (ref.watch(authViewModelProvider).showMessage!) {
+        showSnackBar(
+            message: 'Student Registerd Successfully', context: context);
+        ref.read(authViewModelProvider.notifier).resetMessage(false);
+      }
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Register'),
@@ -143,7 +155,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                               )
                               .toList(),
                           onChanged: (value) {
-                            selectedEntity = value as BatchEntity;
+                            selectedBatch = value as BatchEntity;
                           },
                           decoration: const InputDecoration(
                             labelText: 'Select Batch',
@@ -224,7 +236,21 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                   _gap,
                   ElevatedButton(
                     onPressed: () {
-                      if (_key.currentState!.validate()) {}
+                      if (_key.currentState!.validate()) {
+                        final entity = AuthEntity(
+                          fname: _fnameController.text,
+                          lname: _lnameController.text,
+                          phone: _phoneController.text,
+                          batch: selectedBatch!,
+                          courses: _lstCourseSelected,
+                          username: _usernameController.text,
+                          password: _passwordController.text,
+                        );
+                        // Register user
+                        ref
+                            .read(authViewModelProvider.notifier)
+                            .registerStudent(entity);
+                      }
                     },
                     child: const Text('Register'),
                   ),
