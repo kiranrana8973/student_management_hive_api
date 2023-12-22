@@ -29,7 +29,7 @@ class BatchHiveModel {
   // Convert Hive Object to Entity
   static BatchEntity toEntity(BatchHiveModel hiveModel) => BatchEntity(
         batchId: hiveModel.batchId,
-        batchName: '${hiveModel.batchName}b',
+        batchName: hiveModel.batchName,
       );
 
   @override

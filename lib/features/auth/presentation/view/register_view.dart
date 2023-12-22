@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:student_management_hive_api/features/batch/domain/entity/batch_entity.dart';
+import 'package:student_management_hive_api/features/batch/presentation/view_model/batch_view_model.dart';
+import 'package:student_management_hive_api/features/course/domain/entity/course_entity.dart';
+import 'package:student_management_hive_api/features/course/presentation/view_model/course_view_model.dart';
 
-class RegisterView extends ConsumerWidget {
-  RegisterView({super.key});
+class RegisterView extends ConsumerStatefulWidget {
+  const RegisterView({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _RegisterViewState();
+}
+
+class _RegisterViewState extends ConsumerState<RegisterView> {
   final _gap = const SizedBox(height: 8);
 
   final _key = GlobalKey<FormState>();
@@ -12,16 +23,15 @@ class RegisterView extends ConsumerWidget {
   final _usernameController = TextEditingController(text: 'kiran');
   final _passwordController = TextEditingController(text: 'kiran123');
 
-  // final _fnameController = TextEditingController();
-  // final _lnameController = TextEditingController();
-  // final _phoneController = TextEditingController();
-  // final _usernameController = TextEditingController();
-  // final _passwordController = TextEditingController();
+  bool isObscure = true;
 
-  final bool isObscure = true;
+  BatchEntity? selectedEntity;
+  final List<CourseEntity> _lstCourseSelected = [];
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final batchState = ref.watch(batchViewModelProvider);
+    final courseState = ref.watch(courseViewModelProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Register'),
@@ -120,9 +130,60 @@ class RegisterView extends ConsumerWidget {
                     }),
                   ),
                   _gap,
-                  // DropDown
+                  batchState.isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : DropdownButtonFormField(
+                          hint: const Text('Select batch'),
+                          items: batchState.batches
+                              .map(
+                                (e) => DropdownMenuItem<BatchEntity>(
+                                  value: e,
+                                  child: Text(e.batchName),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (value) {
+                            selectedEntity = value as BatchEntity;
+                          },
+                          decoration: const InputDecoration(
+                            labelText: 'Select Batch',
+                          ),
+                        ),
                   _gap,
-                  // Multi Checkbox
+                  courseState.isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : MultiSelectDialogField(
+                          title: const Text('Select course'),
+                          items: courseState.courses
+                              .map(
+                                (course) => MultiSelectItem(
+                                  course,
+                                  course.courseName,
+                                ),
+                              )
+                              .toList(),
+                          listType: MultiSelectListType.CHIP,
+                          buttonText: const Text('Select course(s)'),
+                          buttonIcon: const Icon(Icons.search),
+                          onConfirm: (values) {
+                            _lstCourseSelected.clear();
+                            _lstCourseSelected.addAll(values);
+                          },
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey,
+                            ),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          validator: ((value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please select courses';
+                            }
+                            return null;
+                          }),
+                        ),
                   _gap,
                   TextFormField(
                     controller: _usernameController,
@@ -146,7 +207,11 @@ class RegisterView extends ConsumerWidget {
                         icon: Icon(
                           isObscure ? Icons.visibility : Icons.visibility_off,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          setState(() {
+                            isObscure = !isObscure;
+                          });
+                        },
                       ),
                     ),
                     validator: ((value) {
@@ -157,7 +222,6 @@ class RegisterView extends ConsumerWidget {
                     }),
                   ),
                   _gap,
-
                   ElevatedButton(
                     onPressed: () {
                       if (_key.currentState!.validate()) {}
