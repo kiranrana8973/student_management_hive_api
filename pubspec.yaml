@@ -49,6 +49,7 @@ dependencies:
   json_serializable: ^6.7.1
   json_annotation: ^4.8.1
   permission_handler: ^11.1.0
+  image_picker: ^1.0.5
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:student_management_hive_api/core/common/provider/is_network_provider.dart';
 import 'package:student_management_hive_api/core/common/snackbar/my_snackbar.dart';
 import 'package:student_management_hive_api/features/auth/domain/entity/auth_entity.dart';
@@ -31,6 +35,31 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
 
   BatchEntity? selectedBatch;
   final List<CourseEntity> _lstCourseSelected = [];
+
+  // Check for the camera permission
+  checkCameraPermission() async {
+    if (await Permission.camera.request().isRestricted ||
+        await Permission.camera.request().isDenied) {
+      await Permission.camera.request();
+    }
+  }
+
+  File? _img;
+  Future _browseImage(WidgetRef ref, ImageSource imageSource) async {
+    try {
+      final image = await ImagePicker().pickImage(source: imageSource);
+      if (image != null) {
+        setState(() {
+          _img = File(image.path);
+          //ref.read(authViewModelProvider.notifier).uploadImage(_img!);
+        });
+      } else {
+        return;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,17 +127,17 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                         ),
                       );
                     },
-                    child: const SizedBox(
+                    child: SizedBox(
                       height: 200,
                       width: 200,
                       child: CircleAvatar(
                         radius: 50,
-                        backgroundImage:
-                            AssetImage('assets/images/profile.png'),
-                        // backgroundImage: _img != null
-                        //     ? FileImage(_img!)
-                        //     : const AssetImage('assets/images/profile.png')
-                        //         as ImageProvider,
+                        // backgroundImage:
+                        //     AssetImage('assets/images/profile.png'),
+                        backgroundImage: _img != null
+                            ? FileImage(_img!)
+                            : const AssetImage('assets/images/profile.png')
+                                as ImageProvider,
                       ),
                     ),
                   ),
