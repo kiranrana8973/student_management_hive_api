@@ -30,20 +30,11 @@ class AuthLocalDataSource {
     String username,
     String password,
   ) async {
-    try {
-      // // Get all students from hive
-      // List<AuthHiveModel> students = await _hiveService.getAllStudents();
-      // // Find the student with the given username and password
-      // AuthHiveModel? student = students.firstWhere(
-      //   (student) =>
-      //       student.username == username && student.password == password,
-      // );
-      // // If student is not null, return true
-      // return const Right(true);
-      _hiveService.loginStudent(username, password);
+    var isLogin = await _hiveService.loginStudent(username, password);
+    if (isLogin) {
       return const Right(true);
-    } catch (e) {
-      return Left(Failure(error: e.toString()));
+    } else {
+      return Left(Failure(error: "Invalid username or password"));
     }
   }
 }

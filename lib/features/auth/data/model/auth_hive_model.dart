@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:student_management_hive_api/config/constants/hive_table_constant.dart';
 import 'package:student_management_hive_api/features/auth/domain/entity/auth_entity.dart';
@@ -8,7 +9,7 @@ import 'package:uuid/uuid.dart';
 part 'auth_hive_model.g.dart';
 
 @HiveType(typeId: HiveTableConstant.studentTableId)
-class AuthHiveModel {
+class AuthHiveModel extends Equatable {
   @HiveField(0)
   final String studentId;
 
@@ -87,4 +88,16 @@ class AuthHiveModel {
   String toString() {
     return 'studentId: $studentId, fname: $fname, lname: $lname, phone: $phone, batch: $batch, courses: $courses, username: $username, password: $password';
   }
+
+  @override
+  List<Object?> get props => [
+        studentId,
+        fname,
+        lname,
+        phone,
+        batch,
+        courses,
+        username,
+        password,
+      ];
 }

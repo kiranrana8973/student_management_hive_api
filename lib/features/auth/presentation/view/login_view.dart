@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:student_management_hive_api/config/router/app_route.dart';
+import 'package:student_management_hive_api/core/common/snackbar/my_snackbar.dart';
+import 'package:student_management_hive_api/features/auth/presentation/auth_viewmodel/auth_viewmodel.dart';
 
 class LoginView extends ConsumerStatefulWidget {
   const LoginView({super.key});
@@ -22,6 +24,13 @@ class _LoginViewState extends ConsumerState<LoginView> {
   bool isObscure = true;
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authViewModelProvider);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (authState.showMessage! && authState.error != null) {
+        showSnackBar(message: 'Invalid Credentials', context: context);
+        ref.read(authViewModelProvider.notifier).resetMessage(false);
+      }
+    });
     return Scaffold(
       body: SafeArea(
         child: Form(
@@ -75,10 +84,16 @@ class _LoginViewState extends ConsumerState<LoginView> {
                     _gap,
                     ElevatedButton(
                       onPressed: () async {
-                        Navigator.pushNamed(context, AppRoute.homeRoute);
-                        // if (_formKey.currentState!.validate()) {
-
-                        // }
+                        // Navigator.pushNamed(context, AppRoute.homeRoute);
+                        if (_formKey.currentState!.validate()) {
+                          await ref
+                              .read(authViewModelProvider.notifier)
+                              .loginStudent(
+                                context,
+                                _usernameController.text,
+                                _passwordController.text,
+                              );
+                        }
                       },
                       child: const SizedBox(
                         height: 50,

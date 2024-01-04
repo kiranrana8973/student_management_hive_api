@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:student_management_hive_api/core/common/provider/is_network_provider.dart';
 import 'package:student_management_hive_api/core/common/snackbar/my_snackbar.dart';
 import 'package:student_management_hive_api/features/auth/domain/entity/auth_entity.dart';
 import 'package:student_management_hive_api/features/auth/presentation/auth_viewmodel/auth_viewmodel.dart';
@@ -35,8 +36,17 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
   Widget build(BuildContext context) {
     final batchState = ref.watch(batchViewModelProvider);
     final courseState = ref.watch(courseViewModelProvider);
-
+    final isConnected = ref.watch(connectivityStatusProvider);
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (isConnected == ConnectivityStatus.isDisconnected) {
+        showSnackBar(
+            message: 'No Internet Connection',
+            context: context,
+            color: Colors.red);
+      } else if (isConnected == ConnectivityStatus.isConnected) {
+        showSnackBar(message: 'You are online', context: context);
+      }
+
       if (ref.watch(authViewModelProvider).showMessage!) {
         showSnackBar(
             message: 'Student Registerd Successfully', context: context);
@@ -155,7 +165,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                               )
                               .toList(),
                           onChanged: (value) {
-                            selectedBatch = value as BatchEntity;
+                            selectedBatch = value;
                           },
                           decoration: const InputDecoration(
                             labelText: 'Select Batch',
@@ -167,7 +177,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                           child: CircularProgressIndicator(),
                         )
                       : MultiSelectDialogField(
-                          title: const Text('Select course'),
+                          title: const Text('Select course(s)'),
                           items: courseState.courses
                               .map(
                                 (course) => MultiSelectItem(
@@ -234,25 +244,28 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                     }),
                   ),
                   _gap,
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_key.currentState!.validate()) {
-                        final entity = AuthEntity(
-                          fname: _fnameController.text,
-                          lname: _lnameController.text,
-                          phone: _phoneController.text,
-                          batch: selectedBatch!,
-                          courses: _lstCourseSelected,
-                          username: _usernameController.text,
-                          password: _passwordController.text,
-                        );
-                        // Register user
-                        ref
-                            .read(authViewModelProvider.notifier)
-                            .registerStudent(entity);
-                      }
-                    },
-                    child: const Text('Register'),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_key.currentState!.validate()) {
+                          final entity = AuthEntity(
+                            fname: _fnameController.text,
+                            lname: _lnameController.text,
+                            phone: _phoneController.text,
+                            batch: selectedBatch!,
+                            courses: _lstCourseSelected,
+                            username: _usernameController.text,
+                            password: _passwordController.text,
+                          );
+                          // Register user
+                          ref
+                              .read(authViewModelProvider.notifier)
+                              .registerStudent(entity);
+                        }
+                      },
+                      child: const Text('Register'),
+                    ),
                   ),
                 ],
               ),
