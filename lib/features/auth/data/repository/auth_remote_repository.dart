@@ -3,18 +3,20 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:student_management_hive_api/core/failure/failure.dart';
-import 'package:student_management_hive_api/features/auth/data/repository/auth_local_repository.dart';
+import 'package:student_management_hive_api/features/auth/data/data_source/auth_remote_data_source.dart';
 import 'package:student_management_hive_api/features/auth/domain/entity/auth_entity.dart';
 import 'package:student_management_hive_api/features/auth/domain/repository/auth_repository.dart';
 
 final authRemoteRepositoryProvider = Provider<IAuthRepository>(
-  (ref) => ref.read(authLocalRepositoryProvider),
+  (ref) => AuthRemoteRepository(
+    ref.read(authRemoteDataSourceProvider),
+  ),
 );
 
-class AuthRemoteDataSource implements IAuthRepository {
+class AuthRemoteRepository implements IAuthRepository {
   final AuthRemoteDataSource _authRemoteDataSource;
 
-  AuthRemoteDataSource(this._authRemoteDataSource);
+  AuthRemoteRepository(this._authRemoteDataSource);
 
   @override
   Future<Either<Failure, bool>> loginStudent(String username, String password) {

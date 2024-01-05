@@ -7,7 +7,6 @@ import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:student_management_hive_api/core/common/provider/is_network_provider.dart';
 import 'package:student_management_hive_api/core/common/snackbar/my_snackbar.dart';
-import 'package:student_management_hive_api/features/auth/domain/entity/auth_entity.dart';
 import 'package:student_management_hive_api/features/auth/presentation/auth_viewmodel/auth_viewmodel.dart';
 import 'package:student_management_hive_api/features/batch/domain/entity/batch_entity.dart';
 import 'package:student_management_hive_api/features/batch/presentation/view_model/batch_view_model.dart';
@@ -45,14 +44,12 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
   }
 
   File? _img;
-  Future _browseImage(WidgetRef ref, ImageSource imageSource) async {
+  Future _browseImage(ImageSource imageSource) async {
     try {
       final image = await ImagePicker().pickImage(source: imageSource);
       if (image != null) {
-        setState(() {
-          _img = File(image.path);
-          //ref.read(authViewModelProvider.notifier).uploadImage(_img!);
-        });
+        _img = File(image.path);
+        //ref.read(authViewModelProvider.notifier).uploadImage(_img!);
       } else {
         return;
       }
@@ -67,14 +64,14 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
     final courseState = ref.watch(courseViewModelProvider);
     final isConnected = ref.watch(connectivityStatusProvider);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (isConnected == ConnectivityStatus.isDisconnected) {
-        showSnackBar(
-            message: 'No Internet Connection',
-            context: context,
-            color: Colors.red);
-      } else if (isConnected == ConnectivityStatus.isConnected) {
-        showSnackBar(message: 'You are online', context: context);
-      }
+      // if (isConnected == ConnectivityStatus.isDisconnected) {
+      //   showSnackBar(
+      //       message: 'No Internet Connection',
+      //       context: context,
+      //       color: Colors.red);
+      // } else if (isConnected == ConnectivityStatus.isConnected) {
+      //   showSnackBar(message: 'You are online', context: context);
+      // }
 
       if (ref.watch(authViewModelProvider).showMessage!) {
         showSnackBar(
@@ -113,12 +110,19 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               ElevatedButton.icon(
-                                onPressed: () {},
+                                onPressed: () {
+                                  checkCameraPermission();
+                                  _browseImage(ImageSource.camera);
+                                  Navigator.pop(context);
+                                },
                                 icon: const Icon(Icons.camera),
                                 label: const Text('Camera'),
                               ),
                               ElevatedButton.icon(
-                                onPressed: () {},
+                                onPressed: () {
+                                  _browseImage(ImageSource.gallery);
+                                  Navigator.pop(context);
+                                },
                                 icon: const Icon(Icons.image),
                                 label: const Text('Gallery'),
                               ),
@@ -187,9 +191,9 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                           hint: const Text('Select batch'),
                           items: batchState.batches
                               .map(
-                                (e) => DropdownMenuItem<BatchEntity>(
-                                  value: e,
-                                  child: Text(e.batchName),
+                                (batch) => DropdownMenuItem<BatchEntity>(
+                                  value: batch,
+                                  child: Text(batch.batchName),
                                 ),
                               )
                               .toList(),
@@ -277,21 +281,21 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (_key.currentState!.validate()) {
-                          final entity = AuthEntity(
-                            fname: _fnameController.text,
-                            lname: _lnameController.text,
-                            phone: _phoneController.text,
-                            batch: selectedBatch!,
-                            courses: _lstCourseSelected,
-                            username: _usernameController.text,
-                            password: _passwordController.text,
-                          );
-                          // Register user
-                          ref
-                              .read(authViewModelProvider.notifier)
-                              .registerStudent(entity);
-                        }
+                        // if (_key.currentState!.validate()) {
+                        //   final entity = AuthEntity(
+                        //     fname: _fnameController.text,
+                        //     lname: _lnameController.text,
+                        //     phone: _phoneController.text,
+                        //     batch: selectedBatch!,
+                        //     courses: _lstCourseSelected,
+                        //     username: _usernameController.text,s
+                        //     password: _passwordController.text,
+                        //   );
+                        //   // Register user
+                        //   ref
+                        //       .read(authViewModelProvider.notifier)
+                        //       .registerStudent(entity);
+                        // }
                       },
                       child: const Text('Register'),
                     ),

@@ -24,8 +24,10 @@ class BatchRemoteDatSource {
   Future<Either<Failure, bool>> addBatch(BatchEntity batch) async {
     try {
       BatchAPIModel batchAPIModel = BatchAPIModel.fromEntity(batch);
-      var response = await dio.post(ApiEndpoints.createBatch,
-          data: batchAPIModel.toJson());
+      var response = await dio.post(
+        ApiEndpoints.createBatch,
+        data: batchAPIModel.toJson(),
+      );
       if (response.statusCode == 201) {
         return const Right(true);
       } else {
