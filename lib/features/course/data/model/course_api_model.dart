@@ -19,6 +19,7 @@ class CourseAPIModel {
   // From entity to model
   factory CourseAPIModel.fromEntity(CourseEntity entity) {
     return CourseAPIModel(
+      courseId: entity.courseId,
       courseName: entity.courseName,
     );
   }

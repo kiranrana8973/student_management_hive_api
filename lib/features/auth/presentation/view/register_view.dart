@@ -7,6 +7,7 @@ import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:student_management_hive_api/core/common/provider/is_network_provider.dart';
 import 'package:student_management_hive_api/core/common/snackbar/my_snackbar.dart';
+import 'package:student_management_hive_api/features/auth/domain/entity/auth_entity.dart';
 import 'package:student_management_hive_api/features/auth/presentation/auth_viewmodel/auth_viewmodel.dart';
 import 'package:student_management_hive_api/features/batch/domain/entity/batch_entity.dart';
 import 'package:student_management_hive_api/features/batch/presentation/view_model/batch_view_model.dart';
@@ -49,7 +50,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
       final image = await ImagePicker().pickImage(source: imageSource);
       if (image != null) {
         _img = File(image.path);
-        //ref.read(authViewModelProvider.notifier).uploadImage(_img!);
+        ref.read(authViewModelProvider.notifier).uploadImage(_img!);
       } else {
         return;
       }
@@ -76,7 +77,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
       if (ref.watch(authViewModelProvider).showMessage!) {
         showSnackBar(
             message: 'Student Registerd Successfully', context: context);
-        ref.read(authViewModelProvider.notifier).resetMessage(false);
+        ref.read(authViewModelProvider.notifier).resetMessage();
       }
     });
 
@@ -281,21 +282,24 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        // if (_key.currentState!.validate()) {
-                        //   final entity = AuthEntity(
-                        //     fname: _fnameController.text,
-                        //     lname: _lnameController.text,
-                        //     phone: _phoneController.text,
-                        //     batch: selectedBatch!,
-                        //     courses: _lstCourseSelected,
-                        //     username: _usernameController.text,s
-                        //     password: _passwordController.text,
-                        //   );
-                        //   // Register user
-                        //   ref
-                        //       .read(authViewModelProvider.notifier)
-                        //       .registerStudent(entity);
-                        // }
+                        if (_key.currentState!.validate()) {
+                          final entity = AuthEntity(
+                            fname: _fnameController.text.trim(),
+                            lname: _lnameController.text.trim(),
+                            phone: _phoneController.text.trim(),
+                            batch: selectedBatch!,
+                            courses: _lstCourseSelected,
+                            image:
+                                ref.read(authViewModelProvider).imageName ?? '',
+                            username:
+                                _usernameController.text.trim().toLowerCase(),
+                            password: _passwordController.text,
+                          );
+                          // Register user
+                          ref
+                              .read(authViewModelProvider.notifier)
+                              .registerStudent(entity);
+                        }
                       },
                       child: const Text('Register'),
                     ),

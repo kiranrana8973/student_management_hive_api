@@ -28,6 +28,7 @@ class BatchAPIModel {
   // From entity to model
   factory BatchAPIModel.fromEntity(BatchEntity entity) {
     return BatchAPIModel(
+      batchId: entity.batchId,
       batchName: entity.batchName,
     );
   }

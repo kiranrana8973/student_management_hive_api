@@ -28,7 +28,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (authState.showMessage! && authState.error != null) {
         showSnackBar(message: 'Invalid Credentials', context: context);
-        ref.read(authViewModelProvider.notifier).resetMessage(false);
+        ref.read(authViewModelProvider.notifier).resetMessage();
       }
     });
     return Scaffold(

@@ -10,4 +10,3 @@ class HiveTableConstant {
   static const int courseTableId = 2;
   static const String courseBox = 'courseBox';
 }
-

@@ -36,8 +36,11 @@ class AuthViewModel extends StateNotifier<AuthState> {
         state = state.copyWith(isLoading: false, error: l.error);
       },
       (imageName) {
-        state =
-            state.copyWith(isLoading: false, error: null, imageName: imageName);
+        state = state.copyWith(
+          isLoading: false,
+          error: null,
+          imageName: imageName,
+        );
       },
     );
   }
@@ -50,6 +53,8 @@ class AuthViewModel extends StateNotifier<AuthState> {
       (failure) => state = state.copyWith(error: failure.error),
       (success) => state = state.copyWith(isLoading: false, showMessage: true),
     );
+
+    resetMessage();
   }
 
   //Login
@@ -84,7 +89,8 @@ class AuthViewModel extends StateNotifier<AuthState> {
     );
   }
 
-  void resetMessage(bool value) {
-    state = state.copyWith(showMessage: value);
+  void resetMessage() {
+    state = state.copyWith(
+        showMessage: false, imageName: null, error: null, isLoading: false);
   }
 }
